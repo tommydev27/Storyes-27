@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>Document</title>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    </head>
+    
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Lobster&family=Bebas+Neue&family=Caveat&family=Shrikhand&family=Graduate&family=Sigmar&display=swap" rel="stylesheet">
+    <style>
+          @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Almendra:wght@700&display=swap');
+
+          body {
+             background: #181818;
+              width: 100%;
+              margin: 0;
+              padding: 0;
+              height: 100vh;
+              justify-content: flex-start;
+              align-items: flex-start;
+              -webkit-user-select: none;
+          }
+
+          .container {
+            padding: 3vw;
+          }
+          
+        #download-wrapper {
+            background-color: transparent; 
+            box-shadow: 0.8vw 0.8vw 2vw rgba(0,0,0,0.917), -0.8vw -0.8vw 4vw rgba(255,255,255,0.206);
+            border-radius:10px;
+            padding: 0vw;
+            display: block; 
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        #capture-area {
+            width: 100%;
+            min-height: 90vw;
+            border-radius: 12vw;
+            padding: 10vw;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+            border: 1px solid transparent; 
+            transition: background 0.3s ease;
+            background: radial-gradient(circle, #2c2c2c 10%, #1a1a1a 100%);
+        }
+
+        #capture-area.light-mode {
+            background: radial-gradient(circle, #eee 10%, #bdbdbd 100%);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 0.3vw;
+            margin-bottom: 3vw;
+        }
+
+        .avatar-container {
+            width: 17vw;
+            height: 16vw;
+            cursor: pointer;
+        }
+
+        .avatar-img {
+            width: 17vw;
+            height: 17vw;
+            aspect-ratio: 1 / 1; 
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .username {
+            font-family: 'UnifrakturMaguntia', cursive;
+            font-size: 7vw;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+            color: #4c9cff;
+        }
+
+        #capture-area.light-mode .username {
+            color: #333333;
+        }
+
+        .verified-badge {
+            width: 6vw;
+            height: 6vw;
+            margin-left:0.5vw;
+            margin-top:-3vw;
+            filter: drop-shadow(2px 2px 2px rgba(131,131,131,0.5));
+        }
+
+        .handle {
+            font-size: 1vw;
+            font-family: Monospace;
+            font-weight: 900;
+            margin: 0;
+            transition: color 0.3s ease;
+            color: #ffffff;
+        }
+
+        #capture-area.light-mode .handle {
+            color: #333333;
+        }
+        
+        .quote-container {
+            flex-grow: 1;
+            margin-top: 3vw;
+            padding-bottom: 2vw;
+        }
+
+        .quote-title {
+            font-family: 'Bebas Neue', sans-serif; 
+            font-size: 5vw;
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            outline: none;
+            white-space: pre-wrap;
+            transition: color 0.3s ease;
+            color: #ff3e3e;
+        }
+
+        #capture-area.light-mode .quote-title {
+            color: #333333;
+        }
+
+        .quote-text {
+            font-family: 'Almendra', serif;
+            border: none;
+            background: transparent;
+            width: 100%;
+            outline: none;
+            resize: none;
+            word-wrap: break-word;
+            text-align: left !important;
+            white-space: pre-wrap;
+            display: inline-block;
+            transition: color 0.3s ease;
+            color: #ffffff;
+        }
+
+        #capture-area.light-mode .quote-text {
+            color: #000000;
+        }
+
+        .watermark {
+            position: absolute;
+            bottom: 8vw;
+            right: 8vw;
+            font-size: 2vw;
+            font-family: Monospace;
+            font-weight: bold;
+            text-transform: lowercase;
+            transition: color 0.3s ease;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        #capture-area.light-mode .watermark {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        .style-controls {
+            display: flex;
+            gap: 2vw; 
+            width: 100%; 
+            box-sizing: border-box;
+            justify-content: space-between;
+            margin-bottom: 3vw; 
+        }
+        
+        .style-controls select, 
+        .style-controls .file-input-label {
+            width: 33%; 
+            display: block; 
+            margin-top: 5vw;
+            padding: 3vw 0; 
+            text-align: center;
+            text-align-last: center; 
+            border-radius: 8vw;
+            background: #222;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-size: 3vw;
+            transition: transform 0.1s ease, opacity 0.1s ease;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            outline: none;
+            box-sizing: border-box;
+            color: #008ec9;
+            box-shadow: 0.8vw 0.8vw 2vw rgba(0,0,0,0.917), -0.8vw -0.8vw 2vw rgba(255,255,255,0.206);
+        }
+        
+        .style-controls select {
+            appearance: none; 
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 2vw center; 
+            background-size: 3vw;
+        }
+        
+        .style-controls select:hover, 
+        .style-controls .file-input-label:hover {
+            opacity: 0.8;
+        }
+        
+        .style-controls select:active, 
+        .style-controls .file-input-label:active {
+            transform: scale(1.05); 
+        }
+        
+        .controls {
+            margin-top: 0; 
+            display: flex;
+            gap: 2vw;
+            width: 100%;
+        }
+        
+        .controls button {
+            flex: 1; 
+            padding: 3vw 0; 
+            border-radius: 8vw; 
+            border: none;
+            cursor: pointer;
+            font-size: 3vw;
+            font-weight: bold;
+            transition: 0.3s;
+            color: #008ec9;
+            box-shadow: 0.8vw 0.8vw 2vw rgba(0,0,0,0.917), -0.8vw -0.8vw 2vw rgba(255,255,255,0.206);
+        }
+
+        .btn-reset { background: #222; color: #008ec9; border-radius:8vw; padding:3.5vw;}
+        .btn-toggle { background: #222; color: #008ec9; border-radius:8vw; padding:3.5vw;}
+        .btn-save { background: #222; color: #008ec9; border-radius:8vw; padding:3.5vw;}
+        
+          button {
+              transition: transform 0.1s ease;
+              -webkit-tap-highlight-color: transparent; 
+              user-select: none;
+              outline: none;
+          }
+          
+          button:hover {
+              opacity: 0.8;
+          }
+          
+          button:active {
+              transform: scale(1.1); 
+          }
+          
+          #file-input { 
+              display: none; 
+          }
+          .quote-container {
+              flex-grow: 1;
+              margin-top: 4vw;
+              padding-bottom: 10vw; 
+          }
+
+    </style>
+    <body>
+      <div class="container">
+    <div id="download-wrapper">
+        <div id="capture-area">
+        <div class="profile-section">
+            <label for="file-input" class="avatar-container">
+                <img id="profile-pic" src="https://i.postimg.cc/XJ4ZRQqY/Screenshot-20260504-125634-jpg-(1).png" class="avatar-img" alt="avatar">
+            </label>
+            <input type="file" id="file-input" accept="image/*" onchange="loadPhoto(event)">
+            
+            <div class="user-info">
+                <h2 class="username" contenteditable="true">Tommy<a style="margin-top:-3vw; font-size:3vw; color: inherit;">𝁇S27</a> <img src="https://img.icons8.com/color/80/verified-badge.png" class="verified-badge"></h2>
+                <p class="handle" contenteditable="true" style="font-size:2.1vw;">@stories_tom.com</p>
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote-title" contenteditable="true" id="title-input">JUDUL QUOTE</div>
+            
+            <div class="quote-text" contenteditable="true" id="quote-input" style="font-size:7vw;">EDIT POTO PROFIL JUDUL ISI TEKS & BAGIAN TEKS KECIL KLIK BAGIAN INI</div>
+            
+            <div class="watermark">tommy-app.com  🐞</div>
+        </div>
+    </div>
+</div>
+
+<div class="style-controls">
+    <select id="font-select" onchange="changeFontStyle()">
+        <option value="'Almendra', serif">Gaya</option>
+        <option value="'UnifrakturMaguntia', cursive">Gaya Gothic</option>
+        <option value="'Arial', sans-serif">Gaya Clean (Arial)</option>
+        <option value="'Monospace'">Gaya Kode</option>
+        
+        <option value="'Shrikhand', display">Gaya Shrikhand</option>
+        <option value="'Graduate', serif">Gaya Graduate</option>
+        <option value="'Sigmar', display">Gaya Sigmar</option>
+        
+        <option value="'Playfair Display', serif">Gaya Elegan</option>
+        <option value="'Lobster', cursive">Gaya Artistik</option>
+        <option value="'Bebas Neue', sans-serif">Gaya Tegas</option>
+        <option value="'Caveat', cursive">Gaya Tulis Tangan</option>
+        <option value="'Georgia', serif">Gaya Klasik</option>
+    </select>
+
+    <select id="size-select" onchange="changeFontSize()">
+        <option value="5vw">Kecil</option>
+        <option value="7vw" selected>Normal</option>
+        <option value="8vw">Besar</option>
+        <option value="9vw">Extra Besar</option>
+    </select>
+    
+    <label for="file-input" class="file-input-label">File</label>
+</div>
+
+<div class="controls">
+    <button class="btn-reset" onclick="resetPage()">Reset Teks</button>
+    <button class="btn-toggle" onclick="toggleMode()">Mode Terang</button>
+    <button class="btn-save" onclick="downloadImage()">Simpan Gambar</button>
+</div>
+<script>
+function loadPhoto(event) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        const output = document.getElementById('profile-pic');
+        output.src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+function changeFontStyle() {
+    const font = document.getElementById('font-select').value;
+    document.getElementById('quote-input').style.fontFamily = font;
+}
+
+function changeFontSize() {
+    const size = document.getElementById('size-select').value;
+    document.getElementById('quote-input').style.fontSize = size;
+}
+
+function toggleMode() {
+    const captureArea = document.getElementById('capture-area');
+    captureArea.classList.toggle('light-mode');
+    
+    const toggleBtn = document.querySelector('.btn-toggle');
+    if(captureArea.classList.contains('light-mode')) {
+        toggleBtn.innerText = "Mode Gelap";
+    } else {
+        toggleBtn.innerText = "Mode Terang";
+    }
+}
+
+function resetPage() {
+    const quote = document.getElementById('quote-input');
+    quote.innerText = "Jangan dengerin omongan orang yang gak ngasih kita makan.";
+    quote.style.fontFamily = "'Almendra', serif";
+    quote.style.fontSize = "7vw";
+
+    const title = document.getElementById('title-input');
+    title.innerText = "JUDUL QUOTE";
+}
+
+function downloadImage() {
+    const area = document.getElementById('download-wrapper');
+    const titleInput = document.getElementById('title-input');
+    const quoteInput = document.getElementById('quote-input');
+    const captureArea = document.getElementById('capture-area');
+
+    const isLightMode = captureArea.classList.contains('light-mode');
+    const canvasBgColor = isLightMode ? "#ffffff" : "#1a1a1a";
+
+    document.fonts.ready.then(() => {
+        html2canvas(area, {
+            useCORS: true,
+            scale: 2,
+            backgroundColor: canvasBgColor,
+            onclone: (clonedDoc) => {
+                const clonedArea = clonedDoc.getElementById('capture-area');
+                const clonedWrapper = clonedDoc.getElementById('download-wrapper');
+
+                clonedWrapper.style.width = '';
+                clonedWrapper.style.height = '1920px';
+                clonedWrapper.style.display = 'flex';
+                clonedWrapper.style.alignItems = 'center';
+                clonedWrapper.style.justifyContent = 'center';
+                clonedWrapper.style.backgroundColor = canvasBgColor;
+                
+                clonedArea.style.width = '920px';
+                clonedArea.style.minHeight = '920px';
+                clonedArea.style.padding = '80px';
+                clonedArea.style.borderRadius = '90px';
+                clonedArea.style.boxShadow = 'none';
+                
+                clonedDoc.querySelector('.profile-section').style.gap = '30px';
+                clonedDoc.querySelector('.profile-section').style.marginBottom = '40px';
+                clonedDoc.querySelector('.avatar-container').style.width = '160px';
+                clonedDoc.querySelector('.avatar-container').style.height = '160px';
+                clonedDoc.getElementById('profile-pic').style.width = '160px';
+                clonedDoc.getElementById('profile-pic').style.height = '160px';
+                
+                const clonedUsername = clonedDoc.querySelector('.username');
+                clonedUsername.style.fontSize = '65px';
+                clonedUsername.querySelector('a').style.fontSize = '30px';
+                clonedUsername.querySelector('a').style.marginLeft = '10px';
+                clonedDoc.querySelector('.verified-badge').style.width = '55px';
+                clonedDoc.querySelector('.verified-badge').style.height = '55px';
+                clonedDoc.querySelector('.verified-badge').style.marginTop = '0px';
+                clonedDoc.querySelector('.handle').style.fontSize = '30px';
+                
+                const clonedTitle = clonedDoc.getElementById('title-input');
+                const clonedQuote = clonedDoc.getElementById('quote-input');
+                
+                clonedTitle.innerText = titleInput.innerText;
+                clonedTitle.style.fontSize = '45px';
+                clonedTitle.style.whiteSpace = "pre-wrap";
+                
+                const currentFontSize = quoteInput.style.fontSize || "7vw";
+                if(currentFontSize === "5vw") clonedQuote.style.fontSize = '50px';
+                else if(currentFontSize === "8vw") clonedQuote.style.fontSize = '80px';
+                else if(currentFontSize === "9vw") clonedQuote.style.fontSize = '95px';
+                else clonedQuote.style.fontSize = '65px';
+                
+                clonedQuote.innerText = quoteInput.innerText;
+                clonedQuote.style.whiteSpace = "pre-wrap";
+                
+                const clonedWm = clonedDoc.querySelector('.watermark');
+                clonedWm.style.fontSize = '26px';
+                clonedWm.style.bottom = '70px';
+                clonedWm.style.right = '70px';
+            }
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'quote-story-' + Date.now() + '.png';
+            link.href = canvas.toDataURL("image/png", 1.0);
+            link.click();
+        });
+    });
+}
+</script>
+
+</body>
+</html>
