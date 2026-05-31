@@ -9,7 +9,7 @@
     </head>
     
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Lobster&family=Bebas+Neue&family=Caveat&family=Shrikhand&family=Graduate&family=Sigmar&display=swap" rel="stylesheet">
-    <style>
+          <style>
           @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Almendra:wght@700&display=swap');
 
           body {
@@ -37,10 +37,15 @@
             margin: 0 auto;
         }
 
-        #capture-area {
+
+        #capture-area.light-mode {
+            background: radial-gradient(circle, #eee 10%, #bdbdbd 100%);
+        }
+
+          #capture-area {
             width: 100%;
             min-height: 90vw;
-            border-radius: 12vw;
+            border-radius: 5vw;
             padding: 10vw;
             display: flex;
             flex-direction: column;
@@ -48,10 +53,14 @@
             overflow: hidden;
             box-sizing: border-box;
             border: 1px solid transparent; 
+
             transition: background 0.3s ease;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             background: radial-gradient(circle, #2c2c2c 10%, #1a1a1a 100%);
         }
-
+        
         #capture-area.light-mode {
             background: radial-gradient(circle, #eee 10%, #bdbdbd 100%);
         }
@@ -184,28 +193,71 @@
             margin-bottom: 3vw; 
         }
         
-        .style-controls select, 
-        .style-controls .file-input-label {
-            width: 33%; 
-            display: block; 
-            margin-top: 5vw;
-            padding: 3vw 0; 
-            text-align: center;
-            text-align-last: center; 
-            border-radius: 8vw;
-            background: #222;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            font-size: 3vw;
-            transition: transform 0.1s ease, opacity 0.1s ease;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-            outline: none;
-            box-sizing: border-box;
-            color: #008ec9;
-            box-shadow: 0.8vw 0.8vw 2vw rgba(0,0,0,0.917), -0.8vw -0.8vw 2vw rgba(255,255,255,0.206);
-        }
+      .style-controls select, 
+      .style-controls .file-input-label,
+      .style-controls .btn-settings {
+          width: 33%; 
+          display: block; 
+          margin-top: 5vw;
+          padding: 3vw 0; 
+          text-align: center;
+          text-align-last: center; 
+          border-radius: 8vw;
+          background: #222;
+          font-weight: 700;
+          border: none;
+          cursor: pointer;
+          font-size: 3vw;
+          transition: transform 0.1s ease, opacity 0.1s ease;
+          -webkit-tap-highlight-color: transparent;
+          user-select: none;
+          outline: none;
+          box-sizing: border-box;
+          color:#03e3ff;
+          box-shadow: 0.8vw 0.8vw 2vw rgba(0,0,0,0.917), -0.8vw -0.8vw 2vw rgba(255,255,255,0.206);
+      }
+      
+      .style-controls .btn-settings:active {
+          transform: scale(1.05);
+      }
+              
+      /* Layout Settings Modal */
+      #settings-modal {
+          position: fixed;
+          top: 38%;
+          left: 5%;
+          width: 70%;
+          background: #444;
+          padding: 4vw;
+          border-radius: 5vw;
+          z-index: 1000;
+          color: white;
+          box-sizing: border-box;
+          box-shadow: 0 0 5vw rgba(0,0,0,0.5);
+      }
+      
+      #settings-modal label {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 3vw;
+          font-size: 3vw;
+      }
+      
+      #settings-modal input[type="range"] {
+          width: 50%;
+      }
+      
+      #settings-modal button {
+          width: 50%;
+          padding: 2vw;
+          border-radius: 8vw;
+          border: none;
+          background:#4c6063;
+          color: white;
+          font-weight: bold;
+          font-size: 4vw;
+      }
         
         .style-controls select {
             appearance: none; 
@@ -233,18 +285,20 @@
             width: 100%;
         }
         
-        .controls button {
-            flex: 1; 
-            padding: 3vw 0; 
-            border-radius: 8vw; 
-            border: none;
-            cursor: pointer;
-            font-size: 3vw;
-            font-weight: bold;
-            transition: 0.3s;
-            color: #008ec9;
-            box-shadow: 0.8vw 0.8vw 2vw rgba(0,0,0,0.917), -0.8vw -0.8vw 2vw rgba(255,255,255,0.206);
-        }
+/* Ganti dari .controls button menjadi ini */
+.controls button, .controls .btn-upload {
+    flex: 1; 
+    padding: 3vw 0; 
+    border-radius: 8vw; 
+    border: none;
+    cursor: pointer;
+    font-size: 2.5vw;
+    font-weight: bold;
+    transition: 0.3s;
+    color: #03e3ff;
+    background: #222;
+    box-shadow: 0.8vw 0.8vw 2vw rgba(0,0,0,0.917), -0.8vw -0.8vw 2vw rgba(255,255,255,0.206);
+}
 
         .btn-reset { background: #222; color: #008ec9; border-radius:8vw; padding:3.5vw;}
         .btn-toggle { background: #222; color: #008ec9; border-radius:8vw; padding:3.5vw;}
@@ -273,7 +327,11 @@
               margin-top: 4vw;
               padding-bottom: 10vw; 
           }
-
+        #capture-area {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
     </style>
     <body>
       <div class="container">
@@ -284,7 +342,8 @@
                 <img id="profile-pic" src="https://i.postimg.cc/XJ4ZRQqY/Screenshot-20260504-125634-jpg-(1).png" class="avatar-img" alt="avatar">
             </label>
             <input type="file" id="file-input" accept="image/*" onchange="loadPhoto(event)">
-            
+
+<input type="file" id="bg-upload" accept="image/*" style="display:none" onchange="loadBackground(event)">
             <div class="user-info">
                 <h2 class="username" contenteditable="true">Tommy<a style="margin-top:-3vw; font-size:3vw; color: inherit;">𝁇S27</a> <img src="https://img.icons8.com/color/80/verified-badge.png" class="verified-badge"></h2>
                 <p class="handle" contenteditable="true" style="font-size:2.1vw;">@stories_tom.com</p>
@@ -296,7 +355,7 @@
             
             <div class="quote-text" contenteditable="true" id="quote-input" style="font-size:7vw;">EDIT POTO PROFIL JUDUL ISI TEKS & BAGIAN TEKS KECIL KLIK BAGIAN INI</div>
             
-            <div class="watermark">tommy-app.com  🐞</div>
+            <div class="watermark">tom-app  🐞</div>
         </div>
     </div>
 </div>
@@ -321,17 +380,31 @@
 
     <select id="size-select" onchange="changeFontSize()">
         <option value="5vw">Kecil</option>
-        <option value="7vw" selected>Normal</option>
-        <option value="8vw">Besar</option>
-        <option value="9vw">Extra Besar</option>
+        <option value="6vw" selected>Normal</option>
+        <option value="7vw">Besar</option>
+        <option value="8vw">Extra Besar</option>
     </select>
     
     <label for="file-input" class="file-input-label">File</label>
-</div>
+    <button class="btn-settings" onclick="toggleSettings()">Pengaturan</button>
 
+<div id="settings-modal" style="display:none; ">
+
+<label>Warna Teks: <input type="color" oninput="updateStyle('color', this.value)"></label><br>
+
+<label>Warna Bingkai: <input type="color" oninput="updateStyle('strokeColor', this.value)"></label><br>
+
+<label>Tebal Bingkai Teks: <input type="range" min="0" max="10" oninput="updateStyle('textStroke', this.value)"></label><br>
+
+<label>Bayangan Teks: <input type="range" min="0" max="20" oninput="updateStyle('textShadow', this.value)"></label><br>
+    
+    <button onclick="toggleSettings()" style="width:100%; margin-top:3vw;">Tutup</button>
+</div>
+</div>
 <div class="controls">
     <button class="btn-reset" onclick="resetPage()">Reset Teks</button>
     <button class="btn-toggle" onclick="toggleMode()">Mode Terang</button>
+    <button class="btn-upload" onclick="document.getElementById('bg-upload').click()">Background</button>
     <button class="btn-save" onclick="downloadImage()">Simpan Gambar</button>
 </div>
 <script>
@@ -356,25 +429,59 @@ function changeFontSize() {
 
 function toggleMode() {
     const captureArea = document.getElementById('capture-area');
+    
+    // Menghapus gambar latar agar CSS bisa kembali ke warna gradient
+    captureArea.style.backgroundImage = ''; 
+    
     captureArea.classList.toggle('light-mode');
     
     const toggleBtn = document.querySelector('.btn-toggle');
-    if(captureArea.classList.contains('light-mode')) {
-        toggleBtn.innerText = "Mode Gelap";
-    } else {
-        toggleBtn.innerText = "Mode Terang";
-    }
+    toggleBtn.innerText = captureArea.classList.contains('light-mode') ? "Mode Gelap" : "Mode Terang";
 }
+
 
 function resetPage() {
     const quote = document.getElementById('quote-input');
-    quote.innerText = "Jangan dengerin omongan orang yang gak ngasih kita makan.";
+    quote.innerText = "EDIT POTO PROFIL JUDUL ISI TEKS & BAGIAN TEKS KECIL KLIK BAGIAN INI";
     quote.style.fontFamily = "'Almendra', serif";
-    quote.style.fontSize = "7vw";
+    quote.style.fontSize = "5vw";
+    quote.style.color = "#ffffff";
+    quote.style.webkitTextStroke = "0px";
+    quote.style.background = "transparent";
+    quote.style.textShadow = "none";
 
     const title = document.getElementById('title-input');
     title.innerText = "JUDUL QUOTE";
+    title.style.color = "#ff3e3e";
+
+    const captureArea = document.getElementById('capture-area');
+    captureArea.style.backgroundImage = 'none';
+    captureArea.style.border = '1px solid transparent';
+    captureArea.style.boxShadow = 'none';
+    captureArea.classList.remove('light-mode');
+    
+    document.querySelector('.btn-toggle').innerText = "Mode Terang";
+    
+    const fileInput = document.getElementById('bg-upload');
+    if (fileInput) fileInput.value = '';
 }
+
+function loadBackground(event) {
+    if (!event.target.files || event.target.files.length === 0) return;
+    
+    const reader = new FileReader();
+    reader.onload = function() {
+        const area = document.getElementById('capture-area');
+        area.style.backgroundImage = `url('${reader.result}')`;
+        area.style.backgroundSize = "cover";
+        area.style.backgroundPosition = "center";
+        
+        area.classList.remove('light-mode');
+        document.querySelector('.btn-toggle').innerText = "Mode Terang";
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}
+
 
 function downloadImage() {
     const area = document.getElementById('download-wrapper');
@@ -451,6 +558,30 @@ function downloadImage() {
             link.click();
         });
     });
+}
+
+
+function toggleSettings() {
+    const modal = document.getElementById('settings-modal');
+    modal.style.display = (modal.style.display === 'none' || modal.style.display === '') ? 'block' : 'none';
+}
+
+let strokeColor = "#ffffff"; // Default warna bingkai
+
+function updateStyle(property, value) {
+    const target = document.getElementById('quote-input');
+    
+    if (property === 'color') {
+        target.style.color = value;
+    } else if (property === 'strokeColor') {
+        strokeColor = value;
+        const currentWidth = target.style.webkitTextStrokeWidth || "0px";
+        target.style.webkitTextStroke = currentWidth + " " + strokeColor;
+    } else if (property === 'textStroke') {
+        target.style.webkitTextStroke = value + "px " + strokeColor;
+    } else if (property === 'textShadow') {
+        target.style.textShadow = '0 0 ' + value + 'px #000';
+    }
 }
 </script>
 
